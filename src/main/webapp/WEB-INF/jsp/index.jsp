@@ -25,10 +25,10 @@ html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
       <a href="#products" class="w3-button w3-block">Product Details</a>
     </div>
     <div class="w3-col s3">
-      <a href="#signup" class="w3-button w3-block">Sign up</a>
+      <a href="/Register.jsp" class="w3-button w3-block">Sign up</a>
     </div>
     <div class="w3-col s3">
-      <a href="#signin" class="w3-button w3-block">Sign in</a>
+      <a href="/login.jsp" class="w3-button w3-block">Sign in</a>
     </div>
   </div>
 </div>
