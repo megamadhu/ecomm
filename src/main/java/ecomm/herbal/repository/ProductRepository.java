@@ -8,4 +8,6 @@ import ecomm.herbal.entity.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+	Product getProductByName(String name);
+
 }

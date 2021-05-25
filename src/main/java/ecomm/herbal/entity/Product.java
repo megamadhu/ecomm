@@ -15,14 +15,16 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotBlank
-	@NotNull
 	@Column(name = "id")
 	private Long id;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "description")
 	private String description;
+	@Column(name = "price")
+	private Double price;
+	@Column(name = "historyprice")
+	private String historyPrice;
 
 	public Long getId() {
 		return id;
@@ -48,13 +50,40 @@ public class Product {
 		this.description = description;
 	}
 
-	public Product(Long id, String name, String description) {
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getHistoryPrice() {
+		return historyPrice;
+	}
+
+	public void setHistoryPrice(String historyPrice) {
+		this.historyPrice = historyPrice;
+	}
+
+	public Product(@NotBlank @NotNull Long id, String name, String description, Double price, String historyPrice) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.price = price;
+		this.historyPrice = historyPrice;
 	}
 
 	public Product() {
+	}
+
+	@Override
+	public String toString() {
+
+		String output = "{\"id\": " + this.id + ",\"name\": \"" + this.name + "\"" + ",\"description\": \""
+				+ this.description + "\"" + ",\"price\": " + this.price + "}";
+
+		return output;
 	}
 
 }
