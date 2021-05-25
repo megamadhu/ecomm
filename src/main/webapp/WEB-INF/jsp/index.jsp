@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -40,10 +41,10 @@ html, body, h1, h2, h3, h4 {
 				<a href="/product/" class="w3-button w3-block">Product Details</a>
 			</div>
 			<div class="w3-col s3">
-				<a href="register.jsp" class="w3-button w3-block">Sign up</a>
+				<a href="/product/signup" class="w3-button w3-block">Sign up</a>
 			</div>
 			<div class="w3-col s3">
-				<a href="login.jsp" class="w3-button w3-block">Sign in</a>
+				<a href="/product/signin" class="w3-button w3-block">Sign in</a>
 			</div>
 		</div>
 	</div>

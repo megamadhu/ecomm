@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -9,9 +10,26 @@
 <link rel="stylesheet" href="/css/font.css">
 <link rel="stylesheet" href="/css/icon.css">
 <script src="/js/jquery.min.js"></script>
-<body>
-<div class="w3-content" style="max-width: 1100px; margin-top: 80px; margin-bottom: 80px">
 
+<body>
+<!-- Links (sit on top) -->
+	<div class="w3-top">
+		<div class="w3-row w3-large w3-light-grey">
+			<div class="w3-col s3">
+				<a href="/" class="w3-button w3-block">Home</a>
+			</div>
+			<div class="w3-col s3">
+				<a href="/product/" class="w3-button w3-block">Product Details</a>
+			</div>
+			<div class="w3-col s3">
+				<a href="/product/signup" class="w3-button w3-block">Sign up</a>
+			</div>
+			<div class="w3-col s3">
+				<a href="/product/signin" class="w3-button w3-block">Sign in</a>
+			</div>
+		</div>
+	</div>
+<div class="w3-content" style="max-width: 1100px; margin-top: 80px; margin-bottom: 80px">
 	<div class="w3-panel">
 		<h1>
 			<b>Herbal India <img src="/images/herbal_india.png" style="width: 5%"></b>
