@@ -3,14 +3,11 @@ package ecomm.herbal.controller;
 import java.util.Date;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +22,10 @@ import ecomm.herbal.exception.EcommException;
 import ecomm.herbal.service.ProductService;
 
 @Controller
-@RequestMapping(value = "/product/")
+@RequestMapping("/product")
 public class ProductController {
-	private static Logger logger = LogManager.getLogger(ProductController.class);
+	private static Logger logger = LogManager
+			.getLogger(ProductController.class);
 
 	@Autowired
 	ProductService productService;
@@ -46,9 +44,10 @@ public class ProductController {
 		}
 	}
 
-	@PostMapping(value = "/add", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@PostMapping(value = "/add")
 	public ModelAndView addProduct(@RequestParam(value = "name") String name,
-			@RequestParam(value = "description") String description, @RequestParam(value = "price") Double price) {
+			@RequestParam(value = "description") String description,
+			@RequestParam(value = "price") Double price)  throws EcommException{
 		logger.info("ProductController: addProduct() ");
 		ModelAndView modelAndView = new ModelAndView("products");
 		try {
@@ -79,7 +78,8 @@ public class ProductController {
 
 		} catch (Exception e) {
 			logger.error(ProductConstants.PRODUCT_ADD_FAILED, e);
-			modelAndView.addObject("errMsg", ProductConstants.PRODUCT_ADD_FAILED);
+			modelAndView.addObject("errMsg",
+					ProductConstants.PRODUCT_ADD_FAILED);
 		}
 
 		List<Product> allProduct = productService.getAllProduct();
@@ -97,21 +97,26 @@ public class ProductController {
 		return historyArr;
 	}
 
-	@GetMapping("/delete")
-	public ModelAndView deleteProductById(@PathParam(value = "id") Long id) throws EcommException {
+	@PostMapping("/delete")
+	public ModelAndView deleteProductById(
+			@RequestParam(value = "productId") Long id) throws EcommException {
 		logger.info("ProductController: deleteProductById(){} ", id);
 		ModelAndView modelAndView = new ModelAndView("products");
 		if (id != null) {
 			try {
 				productService.deleteProductById(id);
+				modelAndView.addObject("msg",
+						ProductConstants.PRODUCT_SUCCESS);
 
 			} catch (Exception e) {
 				logger.error(ProductConstants.PRODUCT_DELETE_FAILED, e);
-				modelAndView.addObject("errMsg", ProductConstants.PRODUCT_DELETE_FAILED);
+				modelAndView.addObject("errMsg",
+						ProductConstants.PRODUCT_DELETE_FAILED);
 			}
 		} else {
 			logger.error(ProductConstants.PRODUCT_INVALID_INPUT);
-			modelAndView.addObject("errMsg", ProductConstants.PRODUCT_INVALID_INPUT);
+			modelAndView.addObject("errMsg",
+					ProductConstants.PRODUCT_INVALID_INPUT);
 		}
 		List<Product> allProduct = productService.getAllProduct();
 		modelAndView.addObject("allProduct", allProduct);

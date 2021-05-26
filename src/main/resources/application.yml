@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /ecomm
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/ecommdb
@@ -16,3 +19,6 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  resources:
+    add-mappings: true
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/

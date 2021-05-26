@@ -7,13 +7,20 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 public class EcommHandler {
-	
-	
-	
-	 @ExceptionHandler(NoHandlerFoundException.class)
-	    public ModelAndView handleResourceNotFoundException(NoHandlerFoundException e) {
-		 ModelAndView modelAndView = new ModelAndView("error");
+
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ModelAndView handleResourceNotFoundException(
+			NoHandlerFoundException e) {
+		ModelAndView modelAndView = new ModelAndView("error");
+		modelAndView.addObject("errType", "404");
 		return modelAndView;
-	    }
+	}
+
+	@ExceptionHandler(EcommException.class)
+	public ModelAndView handleEcommException(EcommException e) {
+		ModelAndView modelAndView = new ModelAndView("error");
+		modelAndView.addObject("errType", "generic");
+		return modelAndView;
+	}
 
 }
