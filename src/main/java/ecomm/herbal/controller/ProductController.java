@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ecomm.herbal.constants.ProductConstants;
 import ecomm.herbal.entity.Product;
 import ecomm.herbal.exception.EcommException;
-import ecomm.herbal.service.ProductService;
+import ecomm.herbal.repository.ProductRepository;
 
 @Controller
 @RequestMapping("/product")
@@ -28,37 +28,34 @@ public class ProductController {
 			.getLogger(ProductController.class);
 
 	@Autowired
-	ProductService productService;
+	ProductRepository productRepository;
 
 	@GetMapping()
 	public ModelAndView getAllProduct() throws EcommException {
 		logger.info("ProductController: getAllProduct()");
-		try {
-			List<Product> allProduct = productService.getAllProduct();
-			ModelAndView modelAndView = new ModelAndView("products");
-			modelAndView.addObject("allProduct", allProduct);
-			return modelAndView;
-		} catch (Exception e) {
-			throw new EcommException(ProductConstants.PRODUCT_NOT_FOUND);
-
-		}
+		List<Product> allProduct = productRepository.findAll();
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
+		modelAndView.addObject("allProduct", allProduct);
+		return modelAndView;
 	}
 
 	@PostMapping(value = "/add")
 	public ModelAndView addProduct(@RequestParam(value = "name") String name,
 			@RequestParam(value = "description") String description,
-			@RequestParam(value = "price") Double price)  throws EcommException{
+			@RequestParam(value = "price") Double price) throws EcommException {
 		logger.info("ProductController: addProduct() ");
-		ModelAndView modelAndView = new ModelAndView("products");
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
 		try {
 
-			Product product = productService.getProductByName(name);
+			Product product = productRepository.getProductByName(name);
 			if (product == null) {
 				product = new Product();
 				product.setDescription(description);
 				product.setPrice(price);
 				product.setName(name);
-				product = productService.addProduct(product);
+				product = productRepository.saveAndFlush(product);
 				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
 			} else {
 				String historyPrice = product.getHistoryPrice();
@@ -72,7 +69,7 @@ public class ProductController {
 				product.setPrice(price);
 				product.setName(name);
 				product.setHistoryPrice(historyArr.toString());
-				product = productService.updateProduct(product);
+				product = productRepository.saveAndFlush(product);
 				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
 			}
 
@@ -82,7 +79,7 @@ public class ProductController {
 					ProductConstants.PRODUCT_ADD_FAILED);
 		}
 
-		List<Product> allProduct = productService.getAllProduct();
+		List<Product> allProduct = productRepository.findAll();
 		modelAndView.addObject("allProduct", allProduct);
 		return modelAndView;
 
@@ -101,13 +98,12 @@ public class ProductController {
 	public ModelAndView deleteProductById(
 			@RequestParam(value = "productId") Long id) throws EcommException {
 		logger.info("ProductController: deleteProductById(){} ", id);
-		ModelAndView modelAndView = new ModelAndView("products");
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
 		if (id != null) {
 			try {
-				productService.deleteProductById(id);
-				modelAndView.addObject("msg",
-						ProductConstants.PRODUCT_SUCCESS);
-
+				productRepository.deleteById(id);
+				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
 			} catch (Exception e) {
 				logger.error(ProductConstants.PRODUCT_DELETE_FAILED, e);
 				modelAndView.addObject("errMsg",
@@ -118,7 +114,7 @@ public class ProductController {
 			modelAndView.addObject("errMsg",
 					ProductConstants.PRODUCT_INVALID_INPUT);
 		}
-		List<Product> allProduct = productService.getAllProduct();
+		List<Product> allProduct = productRepository.findAll();
 		modelAndView.addObject("allProduct", allProduct);
 
 		return modelAndView;

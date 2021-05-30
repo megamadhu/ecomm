@@ -1,9 +1,10 @@
 server:
+  port: 9091
   servlet:
     context-path: /ecomm
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ecommdb
+    url: jdbc:mysql://localhost:3306/ecommdb?createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8
     username: root
     password: root
   jpa:

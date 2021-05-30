@@ -7,9 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -30,17 +31,17 @@ public class SignInController {
 	@Autowired
 	SignInRepository signInRepository;
 
-	@GetMapping(value = "/signup")
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public ModelAndView signUpGet() throws EcommException {
 		logger.info("SignInController: signUpGet()");
-		ModelAndView modelAndView = new ModelAndView("signup");
+		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
 		return modelAndView;
 	}
 
 	@GetMapping(value = "/signin")
 	public ModelAndView signInGet() throws EcommException {
 		logger.info("SignInController: signInGet()");
-		ModelAndView modelAndView = new ModelAndView("signin");
+		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
 		return modelAndView;
 	}
 
@@ -60,16 +61,17 @@ public class SignInController {
 		signUp.setSignupKey(signupKey);
 
 		Signup unameDB = signInRepository.getByUsername(uname);
-		if (StringUtils.isEmpty(unameDB)) {
+		if (unameDB == null) {
 
-			modelAndView = new ModelAndView("signin");
+			modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
 			signInRepository.save(signUp);
 			modelAndView.addObject("msg",
 					SignInConstants.REGISTRATION_SUCCESSFULL);
 
 		} else {
-			modelAndView = new ModelAndView("signup");
+			modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
 			modelAndView.addObject("errMsg", SignInConstants.USER_EXISTS);
+			logger.error(SignInConstants.USER_EXISTS);
 		}
 
 		return modelAndView;
@@ -80,7 +82,7 @@ public class SignInController {
 			@RequestParam(value = "pass") String pass,
 			HttpServletRequest request) throws EcommException {
 		logger.info("SignInController: signInPost()");
-		ModelAndView modelAndView = new ModelAndView("signin");
+		ModelAndView modelAndView = null;
 		Signup signUp = new Signup();
 		SignupKey signupKey = new SignupKey();
 		signupKey.setPassword(pass);
@@ -92,20 +94,22 @@ public class SignInController {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("uname", unameDB.getSignupKey().getUsername());
-			modelAndView = new ModelAndView("index");
+			modelAndView = new ModelAndView(SignInConstants.VIEW_INDEX);
 
 		} else {
+			modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
 			modelAndView.addObject("errMsg",
 					SignInConstants.USERNAME_PASSOWRD_INVALID);
+			logger.error(SignInConstants.USERNAME_PASSOWRD_INVALID);
 		}
 
 		return modelAndView;
 	}
 
 	@GetMapping(value = "/signout")
-	public ModelAndView signUpPost(HttpSession httpsession, SessionStatus status) {
+	public ModelAndView signout(HttpSession httpsession, SessionStatus status) {
 		logger.info("SignInController: signUpPost()");
-		ModelAndView modelAndView = new ModelAndView("index");
+		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_INDEX);
 		status.setComplete();
 
 		httpsession.invalidate();
@@ -116,17 +120,18 @@ public class SignInController {
 	@GetMapping(value = "/editProfile")
 	public ModelAndView editProfileGet(HttpServletRequest request)
 			throws EcommException {
-		logger.info("SignInController: editProfile()");
-		ModelAndView modelAndView = new ModelAndView("signup");
+		logger.info("SignInController: editProfileGet()");
+		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
 
 		HttpSession session = request.getSession();
 		if (session.getAttribute("uname") != null) {
 
 			Signup unameDB = signInRepository.getByUsername(session
 					.getAttribute("uname").toString());
-			if (StringUtils.isEmpty(unameDB)) {
+			if (unameDB == null) {
 
 				modelAndView.addObject("errMsg", SignInConstants.USER_INVALID);
+				logger.error(SignInConstants.USER_INVALID);
 
 			} else {
 				modelAndView.addObject("signupDB", unameDB);
@@ -143,7 +148,7 @@ public class SignInController {
 			@RequestParam(value = "pass") String pass,
 			@RequestParam(value = "email") String email) throws EcommException {
 		logger.info("SignInController: editProfilePost()");
-		ModelAndView modelAndView = new ModelAndView("signup");
+		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
 
 		Signup signUp = new Signup();
 		signUp.setEmail(email);

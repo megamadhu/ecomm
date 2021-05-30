@@ -77,13 +77,5 @@ public class Product {
 	public Product() {
 	}
 
-	@Override
-	public String toString() {
-
-		String output = "{\"id\": " + this.id + ",\"name\": \"" + this.name + "\"" + ",\"description\": \""
-				+ this.description + "\"" + ",\"price\": " + this.price + "}";
-
-		return output;
-	}
 
 }
