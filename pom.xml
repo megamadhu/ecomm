@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>ecomm</name>
-	<description>Ecommerce</description>
+	<description>Herbal India</description>
 
 	<properties>
 		<java.version>1.8</java.version>
