@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ma20102974.ecomm</groupId>
 	<artifactId>ecomm</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>war</packaging>
 	<name>ecomm</name>
 	<description>Herbal India</description>
