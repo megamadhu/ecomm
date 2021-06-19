@@ -1,12 +1,13 @@
 package ecomm.herbal.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import ecomm.herbal.constants.ProductConstants;
 import ecomm.herbal.entity.Product;
@@ -37,6 +37,7 @@ import ecomm.herbal.repository.ProductRepository;
 public class ProductControllerTest {
 
 	private MockMvc mockMvc;
+	public static final SimpleDateFormat DATE_DD_MM_YYYY = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Mock
 	private ProductRepository productRepository;
@@ -51,8 +52,7 @@ public class ProductControllerTest {
 		// and for the mock service to be injected into the controller under
 		// test.
 		MockitoAnnotations.initMocks(this);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(productController)
-				.build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
 
 	}
 
@@ -77,26 +77,17 @@ public class ProductControllerTest {
 	@Test
 	public void testAddProduct() {
 		try {
-			Mockito.when(productRepository.getProductByName("bodymos"))
-					.thenReturn(null);
+			Mockito.when(productRepository.getProductByName("bodymos")).thenReturn(null);
 			Product product = new Product();
 			product.setName("bodymos");
 			product.setDescription("");
 			product.setPrice(15.50);
-			Mockito.when(productRepository.saveAndFlush(product)).thenReturn(
-					product);
+			Mockito.when(productRepository.saveAndFlush(product)).thenReturn(product);
 
 			this.mockMvc
-					.perform(
-							post("/product/add")
-									.param("name", "bodymos")
-									.param("description",
-											"a mosquito repellent")
-									.param("price", "13.50"))
-					.andExpect(status().isOk())
-					.andExpect(
-							model().attribute("msg",
-									ProductConstants.PRODUCT_SUCCESS));
+					.perform(post("/product/add").param("name", "bodymos").param("description", "a mosquito repellent")
+							.param("price", "13.50"))
+					.andExpect(status().isOk()).andExpect(model().attribute("msg", ProductConstants.PRODUCT_SUCCESS));
 		} catch (Exception e) {
 			fail();
 		}
@@ -112,24 +103,15 @@ public class ProductControllerTest {
 			JSONArray arr = new JSONArray();
 			JSONObject price = new JSONObject();
 			price.put("price", "16.50");
-			price.put("date",
-					ProductConstants.DATE_DD_MM_YYYY.format(new Date()));
+			price.put("date", DATE_DD_MM_YYYY.format(new Date()));
 			product.setHistoryPrice(arr.toString());
 
-			Mockito.when(productRepository.getProductByName("bodymos"))
-					.thenReturn(product);
+			Mockito.when(productRepository.getProductByName("bodymos")).thenReturn(product);
 
 			this.mockMvc
-					.perform(
-							post("/product/add")
-									.param("name", "bodymos")
-									.param("description",
-											"a mosquito repellent")
-									.param("price", "13.50"))
-					.andExpect(status().isOk())
-					.andExpect(
-							model().attribute("msg",
-									ProductConstants.PRODUCT_SUCCESS));
+					.perform(post("/product/add").param("name", "bodymos").param("description", "a mosquito repellent")
+							.param("price", "13.50"))
+					.andExpect(status().isOk()).andExpect(model().attribute("msg", ProductConstants.PRODUCT_SUCCESS));
 		} catch (Exception e) {
 			fail();
 		}
@@ -144,24 +126,16 @@ public class ProductControllerTest {
 			product.setPrice(15.50);
 			JSONObject price = new JSONObject();
 			price.put("price", "16.50");
-			price.put("date",
-					ProductConstants.DATE_DD_MM_YYYY.format(new Date()));
+			price.put("date", DATE_DD_MM_YYYY.format(new Date()));
 			product.setHistoryPrice(price.toString());
 
-			Mockito.when(productRepository.getProductByName("bodymos"))
-					.thenReturn(product);
+			Mockito.when(productRepository.getProductByName("bodymos")).thenReturn(product);
 
 			this.mockMvc
-					.perform(
-							post("/product/add")
-									.param("name", "bodymos")
-									.param("description",
-											"a mosquito repellent")
-									.param("price", "13.50"))
+					.perform(post("/product/add").param("name", "bodymos").param("description", "a mosquito repellent")
+							.param("price", "13.50"))
 					.andExpect(status().isOk())
-					.andExpect(
-							model().attribute("errMsg",
-									ProductConstants.PRODUCT_ADD_FAILED));
+					.andExpect(model().attribute("errMsg", ProductConstants.PRODUCT_ADD_FAILED));
 		} catch (Exception e) {
 			fail();
 		}
@@ -171,12 +145,8 @@ public class ProductControllerTest {
 	public void testDeleteProductById() {
 		try {
 			Mockito.doNothing().when(productRepository).deleteById((long) 1);
-			this.mockMvc
-					.perform(post("/product/delete").param("productId", "1"))
-					.andExpect(status().isOk())
-					.andExpect(
-							model().attribute("msg",
-									ProductConstants.PRODUCT_SUCCESS));
+			this.mockMvc.perform(post("/product/delete").param("productId", "1")).andExpect(status().isOk())
+					.andExpect(model().attribute("msg", ProductConstants.PRODUCT_SUCCESS));
 		} catch (Exception e) {
 			fail();
 		}
