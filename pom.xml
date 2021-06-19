@@ -20,7 +20,10 @@
 		<mocito.version>2.28.2</mocito.version>
 		<junit.version>4.12</junit.version>
 		<jacaco.version>0.8.4</jacaco.version>
+		<skip.surefire.tests>${skipTests}</skip.surefire.tests>
 	</properties>
+
+
 
 	<dependencies>
 		<dependency>
@@ -69,6 +72,19 @@
 			<version>1.2</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+		</dependency>
+
 	</dependencies>
 
 
@@ -80,14 +96,46 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>ft</id>
+						<phase>none</phase>
+						<configuration>
+							<includes>
+								<include>**/*FT.java</include>
+							</includes>
+							<excludes>
+								<exclude>**/*Test.java</exclude>
+							</excludes>
+							<configuration>
+								<suiteXmlFiles>
+									<suiteXmlFile>testng.xml</suiteXmlFile>
+								</suiteXmlFiles>
+							</configuration>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<excludes>
-						<exclude />
-					</excludes>
+					<skipTests>true</skipTests>
 				</configuration>
+				<executions>
+					<execution>
+						<id>ut</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skipTests>false</skipTests>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
