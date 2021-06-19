@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import ecomm.herbal.constants.ProductConstants;
 import ecomm.herbal.constants.SignInConstants;
 import ecomm.herbal.entity.Signup;
 import ecomm.herbal.entity.SignupKey;
@@ -65,12 +66,12 @@ public class SignInController {
 
 			modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
 			signInRepository.save(signUp);
-			modelAndView.addObject("msg",
+			modelAndView.addObject(ProductConstants.MSG,
 					SignInConstants.REGISTRATION_SUCCESSFULL);
 
 		} else {
 			modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
-			modelAndView.addObject("errMsg", SignInConstants.USER_EXISTS);
+			modelAndView.addObject(ProductConstants.ERR_MSG, SignInConstants.USER_EXISTS);
 			logger.error(SignInConstants.USER_EXISTS);
 		}
 
@@ -98,7 +99,7 @@ public class SignInController {
 
 		} else {
 			modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
-			modelAndView.addObject("errMsg",
+			modelAndView.addObject(ProductConstants.ERR_MSG,
 					SignInConstants.USERNAME_PASSOWRD_INVALID);
 			logger.error(SignInConstants.USERNAME_PASSOWRD_INVALID);
 		}
@@ -130,7 +131,7 @@ public class SignInController {
 					.getAttribute("uname").toString());
 			if (unameDB == null) {
 
-				modelAndView.addObject("errMsg", SignInConstants.USER_INVALID);
+				modelAndView.addObject(ProductConstants.ERR_MSG, SignInConstants.USER_INVALID);
 				logger.error(SignInConstants.USER_INVALID);
 
 			} else {
@@ -159,7 +160,7 @@ public class SignInController {
 		signUp.setSignupKey(signupKey);
 
 		Signup unameDB = signInRepository.saveAndFlush(signUp);
-		modelAndView.addObject("msg", SignInConstants.USER_DETAILS_SAVED);
+		modelAndView.addObject(ProductConstants.MSG, SignInConstants.USER_DETAILS_SAVED);
 		modelAndView.addObject("signupDB", unameDB);
 		return modelAndView;
 	}

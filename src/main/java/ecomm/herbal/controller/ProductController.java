@@ -25,8 +25,10 @@ import ecomm.herbal.repository.ProductRepository;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-	private static Logger logger = LogManager.getLogger(ProductController.class);
-	public static final SimpleDateFormat DATE_DD_MM_YYYY = new SimpleDateFormat("yyyy-MM-dd");
+	private static Logger logger = LogManager
+			.getLogger(ProductController.class);
+	private SimpleDateFormat DATE_DD_MM_YYYY = new SimpleDateFormat(
+			"yyyy-MM-dd");
 
 	@Autowired
 	ProductRepository productRepository;
@@ -35,17 +37,19 @@ public class ProductController {
 	public ModelAndView getAllProduct() throws EcommException {
 		logger.info("ProductController: getAllProduct()");
 		List<Product> allProduct = productRepository.findAll();
-		ModelAndView modelAndView = new ModelAndView(ProductConstants.VIEW_PRODUCTS);
-		modelAndView.addObject("allProduct", allProduct);
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
+		modelAndView.addObject(ProductConstants.ALL_PRODUCT, allProduct);
 		return modelAndView;
 	}
 
 	@PostMapping(value = "/add")
 	public ModelAndView addProduct(@RequestParam(value = "name") String name,
-			@RequestParam(value = "description") String description, @RequestParam(value = "price") Double price)
-			throws EcommException {
+			@RequestParam(value = "description") String description,
+			@RequestParam(value = "price") Double price) throws EcommException {
 		logger.info("ProductController: addProduct() ");
-		ModelAndView modelAndView = new ModelAndView(ProductConstants.VIEW_PRODUCTS);
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
 		try {
 
 			Product product = productRepository.getProductByName(name);
@@ -54,8 +58,6 @@ public class ProductController {
 				product.setDescription(description);
 				product.setPrice(price);
 				product.setName(name);
-				product = productRepository.saveAndFlush(product);
-				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
 			} else {
 				String historyPrice = product.getHistoryPrice();
 				JSONArray historyArr = new JSONArray();
@@ -68,17 +70,18 @@ public class ProductController {
 				product.setPrice(price);
 				product.setName(name);
 				product.setHistoryPrice(historyArr.toString());
-				product = productRepository.saveAndFlush(product);
-				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
 			}
 
+			product = productRepository.saveAndFlush(product);
+			modelAndView.addObject(ProductConstants.MSG, ProductConstants.PRODUCT_SUCCESS);
 		} catch (Exception e) {
 			logger.error(ProductConstants.PRODUCT_ADD_FAILED, e);
-			modelAndView.addObject("errMsg", ProductConstants.PRODUCT_ADD_FAILED);
+			modelAndView.addObject(ProductConstants.ERR_MSG,
+					ProductConstants.PRODUCT_ADD_FAILED);
 		}
 
 		List<Product> allProduct = productRepository.findAll();
-		modelAndView.addObject("allProduct", allProduct);
+		modelAndView.addObject(ProductConstants.ALL_PRODUCT, allProduct);
 		return modelAndView;
 
 	}
@@ -93,23 +96,27 @@ public class ProductController {
 	}
 
 	@PostMapping("/delete")
-	public ModelAndView deleteProductById(@RequestParam(value = "productId") Long id) throws EcommException {
+	public ModelAndView deleteProductById(
+			@RequestParam(value = "productId") Long id) throws EcommException {
 		logger.info("ProductController: deleteProductById(){} ", id);
-		ModelAndView modelAndView = new ModelAndView(ProductConstants.VIEW_PRODUCTS);
+		ModelAndView modelAndView = new ModelAndView(
+				ProductConstants.VIEW_PRODUCTS);
 		if (id != null) {
 			try {
 				productRepository.deleteById(id);
-				modelAndView.addObject("msg", ProductConstants.PRODUCT_SUCCESS);
+				modelAndView.addObject(ProductConstants.MSG, ProductConstants.PRODUCT_SUCCESS);
 			} catch (Exception e) {
 				logger.error(ProductConstants.PRODUCT_DELETE_FAILED, e);
-				modelAndView.addObject("errMsg", ProductConstants.PRODUCT_DELETE_FAILED);
+				modelAndView.addObject(ProductConstants.ERR_MSG,
+						ProductConstants.PRODUCT_DELETE_FAILED);
 			}
 		} else {
 			logger.error(ProductConstants.PRODUCT_INVALID_INPUT);
-			modelAndView.addObject("errMsg", ProductConstants.PRODUCT_INVALID_INPUT);
+			modelAndView.addObject(ProductConstants.ERR_MSG,
+					ProductConstants.PRODUCT_INVALID_INPUT);
 		}
 		List<Product> allProduct = productRepository.findAll();
-		modelAndView.addObject("allProduct", allProduct);
+		modelAndView.addObject(ProductConstants.ALL_PRODUCT, allProduct);
 
 		return modelAndView;
 	}

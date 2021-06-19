@@ -37,7 +37,7 @@ import ecomm.herbal.repository.ProductRepository;
 public class ProductControllerTest {
 
 	private MockMvc mockMvc;
-	public static final SimpleDateFormat DATE_DD_MM_YYYY = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat DATE_DD_MM_YYYY = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Mock
 	private ProductRepository productRepository;
