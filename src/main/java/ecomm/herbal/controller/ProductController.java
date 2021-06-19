@@ -72,8 +72,9 @@ public class ProductController {
 				product.setHistoryPrice(historyArr.toString());
 			}
 
-			product = productRepository.saveAndFlush(product);
-			modelAndView.addObject(ProductConstants.MSG, ProductConstants.PRODUCT_SUCCESS);
+			productRepository.saveAndFlush(product);
+			modelAndView.addObject(ProductConstants.MSG,
+					ProductConstants.PRODUCT_SUCCESS);
 		} catch (Exception e) {
 			logger.error(ProductConstants.PRODUCT_ADD_FAILED, e);
 			modelAndView.addObject(ProductConstants.ERR_MSG,
@@ -104,7 +105,8 @@ public class ProductController {
 		if (id != null) {
 			try {
 				productRepository.deleteById(id);
-				modelAndView.addObject(ProductConstants.MSG, ProductConstants.PRODUCT_SUCCESS);
+				modelAndView.addObject(ProductConstants.MSG,
+						ProductConstants.PRODUCT_SUCCESS);
 			} catch (Exception e) {
 				logger.error(ProductConstants.PRODUCT_DELETE_FAILED, e);
 				modelAndView.addObject(ProductConstants.ERR_MSG,

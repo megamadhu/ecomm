@@ -13,6 +13,7 @@ public class SignInConstants {
 	public static final String VIEW_REGISTER = "register";
 	public static final String VIEW_LOGIN = "login";
 	public static final String VIEW_INDEX = "index";
+	public static final String UNAME = "uname";
 
 	SignInConstants() {
 

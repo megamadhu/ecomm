@@ -24,7 +24,7 @@ import ecomm.herbal.exception.EcommException;
 import ecomm.herbal.repository.SignInRepository;
 
 @Controller
-@SessionAttributes("uname")
+@SessionAttributes(SignInConstants.UNAME)
 public class SignInController {
 
 	private static Logger logger = LogManager.getLogger(SignInController.class);
@@ -32,18 +32,16 @@ public class SignInController {
 	@Autowired
 	SignInRepository signInRepository;
 
-	@RequestMapping(value = "/signup", method = RequestMethod.GET)
+	@GetMapping(value = "/signup")
 	public ModelAndView signUpGet() throws EcommException {
 		logger.info("SignInController: signUpGet()");
-		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
-		return modelAndView;
+		return new ModelAndView(SignInConstants.VIEW_REGISTER);
 	}
 
 	@GetMapping(value = "/signin")
 	public ModelAndView signInGet() throws EcommException {
 		logger.info("SignInController: signInGet()");
-		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_LOGIN);
-		return modelAndView;
+		return new ModelAndView(SignInConstants.VIEW_LOGIN);
 	}
 
 	@PostMapping(value = "/signup")
@@ -71,7 +69,8 @@ public class SignInController {
 
 		} else {
 			modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
-			modelAndView.addObject(ProductConstants.ERR_MSG, SignInConstants.USER_EXISTS);
+			modelAndView.addObject(ProductConstants.ERR_MSG,
+					SignInConstants.USER_EXISTS);
 			logger.error(SignInConstants.USER_EXISTS);
 		}
 
@@ -94,7 +93,7 @@ public class SignInController {
 		if (unameDB != null) {
 
 			HttpSession session = request.getSession();
-			session.setAttribute("uname", unameDB.getSignupKey().getUsername());
+			session.setAttribute(SignInConstants.UNAME, unameDB.getSignupKey().getUsername());
 			modelAndView = new ModelAndView(SignInConstants.VIEW_INDEX);
 
 		} else {
@@ -122,16 +121,18 @@ public class SignInController {
 	public ModelAndView editProfileGet(HttpServletRequest request)
 			throws EcommException {
 		logger.info("SignInController: editProfileGet()");
-		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
+		ModelAndView modelAndView = new ModelAndView(
+				SignInConstants.VIEW_REGISTER);
 
 		HttpSession session = request.getSession();
-		if (session.getAttribute("uname") != null) {
+		if (session.getAttribute(SignInConstants.UNAME) != null) {
 
 			Signup unameDB = signInRepository.getByUsername(session
-					.getAttribute("uname").toString());
+					.getAttribute(SignInConstants.UNAME).toString());
 			if (unameDB == null) {
 
-				modelAndView.addObject(ProductConstants.ERR_MSG, SignInConstants.USER_INVALID);
+				modelAndView.addObject(ProductConstants.ERR_MSG,
+						SignInConstants.USER_INVALID);
 				logger.error(SignInConstants.USER_INVALID);
 
 			} else {
@@ -149,7 +150,8 @@ public class SignInController {
 			@RequestParam(value = "pass") String pass,
 			@RequestParam(value = "email") String email) throws EcommException {
 		logger.info("SignInController: editProfilePost()");
-		ModelAndView modelAndView = new ModelAndView(SignInConstants.VIEW_REGISTER);
+		ModelAndView modelAndView = new ModelAndView(
+				SignInConstants.VIEW_REGISTER);
 
 		Signup signUp = new Signup();
 		signUp.setEmail(email);
@@ -160,7 +162,8 @@ public class SignInController {
 		signUp.setSignupKey(signupKey);
 
 		Signup unameDB = signInRepository.saveAndFlush(signUp);
-		modelAndView.addObject(ProductConstants.MSG, SignInConstants.USER_DETAILS_SAVED);
+		modelAndView.addObject(ProductConstants.MSG,
+				SignInConstants.USER_DETAILS_SAVED);
 		modelAndView.addObject("signupDB", unameDB);
 		return modelAndView;
 	}
