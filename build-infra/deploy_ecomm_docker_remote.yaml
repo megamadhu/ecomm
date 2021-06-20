@@ -1,34 +1,35 @@
 - hosts: madhuvm64
-  
-  vars: 
+  vars:
     - remote_home: /home/madhuvm64
-    - remote_dest: "{{ remote_home }}/dockerlab/"
-    - local_tomcat_src: /home/madhumita/Downloads
-    - local_war_src: "/var/lib/jenkins/workspace/{{ jobname }}/target/ecomm-1.0.war"
+    - remote_dest: '{{ remote_home }}/dockerlab/'
     - jobname: ecomm_ut_quality
+    - local_war_src: '/var/lib/jenkins/workspace/{{ jobname }}/target/ecomm-1.0.war'
+    - remote_tgt_path: /opt/tomcat/apache-tomcat-8.5.64/webapps
+    - remote_volume_path: '{{ remote_dest }}/ecomm/'
     - service_name: ecomm_service
     - container_name: ecomm_docker
     - container_image: ecomm
     - tomcat_port: 9095
     - playbook_src: /var/lib/jenkins/workspace/ecomm_ut_quality/ecomm/build-infra/
     - playbook_tgt: /etc/ansible/
-    - remote_war_path: "{{ remote_dest }}/ecomm/"
-    - remote_tgt_path: /sw/apache-tomcat-8.5.64/webapps
-  
   tasks:
-  - name: Create app folder
-    file:
-      path: "{{ remote_dest }}/ecomm/"
-      state: directory
-
-  - name: Copy tomcat server
-    copy:
-      src: "{{ local_tomcat_src }}/apache-tomcat-8.5.64.tar.gz"
-      dest: "{{ remote_dest }}/ecomm/"
-  - name: Copy war to remote
-    copy:
-      src: "{{ local_war_src }}"
-      dest: "{{ remote_war_path }}"
-
-
+    - name: Create volume
+      file:
+        path: '{{ remote_dest }}/ecomm/'
+        state: directory
+        mode: 493
+    - name: Copy war to volume
+      copy:
+        src: '{{ local_war_src }}'
+        dest: '{{ remote_war_path }}'
+    - name: Copy war to remote
+      copy:
+        src: '{{ local_war_src }}'
+        dest: '{{ remote_volume_path }}'
+        mode: 493
+    - name: Set permission to docker.sock file
+      file:
+        path: /var/run/docker.sock
+        state: file
+        mode: 511
 
