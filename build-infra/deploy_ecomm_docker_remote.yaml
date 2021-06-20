@@ -1,0 +1,34 @@
+- hosts: madhuvm64
+  
+  vars: 
+    - remote_home: /home/madhuvm64
+    - remote_dest: "{{ remote_home }}/dockerlab/"
+    - local_tomcat_src: /home/madhumita/Downloads
+    - local_war_src: "/var/lib/jenkins/workspace/{{ jobname }}/target/ecomm-1.0.war"
+    - jobname: ecomm_ut_quality
+    - service_name: ecomm_service
+    - container_name: ecomm_docker
+    - container_image: ecomm
+    - tomcat_port: 9095
+    - playbook_src: /var/lib/jenkins/workspace/ecomm_ut_quality/ecomm/build-infra/
+    - playbook_tgt: /etc/ansible/
+    - remote_war_path: "{{ remote_dest }}/ecomm/"
+    - remote_tgt_path: /sw/apache-tomcat-8.5.64/webapps
+  
+  tasks:
+  - name: Create app folder
+    file:
+      path: "{{ remote_dest }}/ecomm/"
+      state: directory
+
+  - name: Copy tomcat server
+    copy:
+      src: "{{ local_tomcat_src }}/apache-tomcat-8.5.64.tar.gz"
+      dest: "{{ remote_dest }}/ecomm/"
+  - name: Copy war to remote
+    copy:
+      src: "{{ local_war_src }}"
+      dest: "{{ remote_war_path }}"
+
+
+
