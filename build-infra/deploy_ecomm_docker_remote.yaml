@@ -6,12 +6,6 @@
     - local_war_src: '/var/lib/jenkins/workspace/{{ jobname }}/target/ecomm-1.0.war'
     - remote_tgt_path: /opt/tomcat/apache-tomcat-8.5.64/webapps
     - remote_volume_path: '{{ remote_dest }}/ecomm/'
-    - service_name: ecomm_service
-    - container_name: ecomm_docker
-    - container_image: ecomm
-    - tomcat_port: 9095
-    - playbook_src: /var/lib/jenkins/workspace/ecomm_ut_quality/ecomm/build-infra/
-    - playbook_tgt: /etc/ansible/
   tasks:
     - name: Create volume
       file:
@@ -21,15 +15,4 @@
     - name: Copy war to volume
       copy:
         src: '{{ local_war_src }}'
-        dest: '{{ remote_war_path }}'
-    - name: Copy war to remote
-      copy:
-        src: '{{ local_war_src }}'
         dest: '{{ remote_volume_path }}'
-        mode: 493
-    - name: Set permission to docker.sock file
-      file:
-        path: /var/run/docker.sock
-        state: file
-        mode: 511
-
