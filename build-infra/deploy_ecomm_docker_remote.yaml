@@ -1,18 +1,23 @@
 - hosts: madhuvm64
   vars:
     - remote_home: /home/madhuvm64
-    - remote_dest: '{{ remote_home }}/dockerlab/'
+    - remote_dest: '{{ remote_home }}/dockerlab/ecomm/'
     - jobname: ecomm_ut_quality
     - local_war_src: '/var/lib/jenkins/workspace/{{ jobname }}/target/ecomm-1.0.war'
     - remote_tgt_path: /opt/tomcat/apache-tomcat-8.5.64/webapps
     - remote_volume_path: '{{ remote_dest }}/ecomm/'
+    - build_file_src: '/var/lib/jenkins/workspace/{{ jobname }}/build-infra/'
   tasks:
-    - name: Create volume
+    - name: Create volume in remote
       file:
-        path: '{{ remote_dest }}/ecomm/'
+        path: '{{ remote_dest }}'
         state: directory
         mode: 493
-    - name: Copy war to volume
+    - name: Copy war to remote volume
       copy:
         src: '{{ local_war_src }}'
         dest: '{{ remote_volume_path }}'
+    - name: Copy build files into remote volume
+      copy:
+        src: '{{ build_file_src }}'
+        dest: '{{ remote_dest }}'
